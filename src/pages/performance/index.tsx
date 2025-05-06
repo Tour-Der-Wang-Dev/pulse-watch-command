@@ -8,9 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RefreshCw } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
-import { NetworkDevice } from "@/types/network";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { NetworkDevice } from "@/types/network";
 
 const PerformancePage = () => {
   const { latencyData, devices, loading, refreshData } = useNetworkData();

@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { NetworkDataProvider } from "@/contexts/NetworkDataContext";
+import { HelmetProvider } from "react-helmet-async";
 
 import Index from "./pages/Index";
 import DevicesPage from "./pages/devices";
@@ -20,20 +21,22 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="light">
       <NetworkDataProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/devices" element={<DevicesPage />} />
-              <Route path="/incidents" element={<IncidentsPage />} />
-              <Route path="/traffic" element={<TrafficPage />} />
-              <Route path="/performance" element={<PerformancePage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
+        <HelmetProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/devices" element={<DevicesPage />} />
+                <Route path="/incidents" element={<IncidentsPage />} />
+                <Route path="/traffic" element={<TrafficPage />} />
+                <Route path="/performance" element={<PerformancePage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </HelmetProvider>
       </NetworkDataProvider>
     </ThemeProvider>
   </QueryClientProvider>
