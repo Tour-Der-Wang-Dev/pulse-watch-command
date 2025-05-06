@@ -43,14 +43,14 @@ const PerformancePage = () => {
         
         <div className="mb-4">
           <Select
-            value={selectedDevice || ''}
-            onValueChange={(value) => setSelectedDevice(value)}
+            value={selectedDevice || 'all-devices'}
+            onValueChange={(value) => setSelectedDevice(value === 'all-devices' ? null : value)}
           >
             <SelectTrigger className="w-[250px]">
               <SelectValue placeholder="Select a device" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Devices</SelectItem>
+              <SelectItem value="all-devices">All Devices</SelectItem>
               {devices.map((device) => (
                 <SelectItem key={device.id} value={device.id}>{device.name} ({device.ipAddress})</SelectItem>
               ))}
