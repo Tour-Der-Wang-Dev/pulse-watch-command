@@ -9,10 +9,13 @@ import { RefreshCw } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 import { NetworkDevice } from "@/types/network";
+import { Helmet } from "react-helmet";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const PerformancePage = () => {
   const { latencyData, devices, loading, refreshData } = useNetworkData();
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
+  const isMobile = useIsMobile();
   
   const selectedDeviceData = selectedDevice 
     ? devices.find(d => d.id === selectedDevice) 
@@ -27,17 +30,23 @@ const PerformancePage = () => {
   
   return (
     <DashboardLayout>
+      <Helmet>
+        <title>Network Performance Monitoring | Network Monitor</title>
+        <meta name="description" content="Monitor network latency, packet loss, and overall performance metrics in real-time with detailed device-specific analytics." />
+      </Helmet>
+      
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Network Performance</h1>
+          <h1 className="text-xl md:text-2xl font-bold">Network Performance</h1>
           <Button 
             variant="default" 
-            size="sm" 
+            size={isMobile ? "icon" : "sm"} 
             onClick={refreshData} 
             disabled={loading}
+            aria-label="Refresh network performance data"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
+            <RefreshCw className={`h-4 w-4 ${isMobile ? '' : 'mr-2'} ${loading ? 'animate-spin' : ''}`} />
+            {!isMobile && "Refresh"}
           </Button>
         </div>
         
@@ -46,7 +55,7 @@ const PerformancePage = () => {
             value={selectedDevice || 'all-devices'}
             onValueChange={(value) => setSelectedDevice(value === 'all-devices' ? null : value)}
           >
-            <SelectTrigger className="w-[250px]">
+            <SelectTrigger className="w-full md:w-[250px]" aria-label="Select a device to view performance">
               <SelectValue placeholder="Select a device" />
             </SelectTrigger>
             <SelectContent>
@@ -65,7 +74,7 @@ const PerformancePage = () => {
               <CardDescription>Round-trip time</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">
+              <div className="text-2xl md:text-3xl font-bold">
                 {selectedDeviceData ? 
                   `${selectedDeviceData.latency} ms` : 
                   `${Math.round(devices.reduce((acc, device) => acc + device.latency, 0) / devices.length)} ms`
@@ -80,7 +89,7 @@ const PerformancePage = () => {
               <CardDescription>Data transmission failures</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">
+              <div className="text-2xl md:text-3xl font-bold">
                 {selectedDeviceData ? 
                   `${selectedDeviceData.packetLoss.toFixed(2)}%` : 
                   `${(devices.reduce((acc, device) => acc + device.packetLoss, 0) / devices.length).toFixed(2)}%`
@@ -97,22 +106,24 @@ const PerformancePage = () => {
             <CardContent>
               {selectedDeviceData ? (
                 <>
-                  <div className="text-3xl font-bold">
+                  <div className="text-2xl md:text-3xl font-bold">
                     {calculatePerformanceScore(selectedDeviceData)}/100
                   </div>
                   <Progress 
                     value={calculatePerformanceScore(selectedDeviceData)} 
                     className="mt-2"
+                    aria-label={`Performance score: ${calculatePerformanceScore(selectedDeviceData)} out of 100`}
                   />
                 </>
               ) : (
                 <>
-                  <div className="text-3xl font-bold">
+                  <div className="text-2xl md:text-3xl font-bold">
                     {Math.round(devices.reduce((acc, device) => acc + calculatePerformanceScore(device), 0) / devices.length)}/100
                   </div>
                   <Progress 
                     value={Math.round(devices.reduce((acc, device) => acc + calculatePerformanceScore(device), 0) / devices.length)} 
                     className="mt-2"
+                    aria-label={`Average performance score: ${Math.round(devices.reduce((acc, device) => acc + calculatePerformanceScore(device), 0) / devices.length)} out of 100`}
                   />
                 </>
               )}
@@ -131,7 +142,7 @@ const PerformancePage = () => {
               <CardTitle>{selectedDeviceData.name} - Details</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">IP Address</p>
                   <p className="font-medium">{selectedDeviceData.ipAddress}</p>
