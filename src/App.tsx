@@ -14,6 +14,7 @@ import IncidentsPage from "./pages/incidents";
 import TrafficPage from "./pages/traffic";
 import PerformancePage from "./pages/performance";
 import NotFound from "./pages/NotFound";
+import IntegrationPlan from "./pages/integration-plan";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
                 <Route path="/incidents" element={<IncidentsPage />} />
                 <Route path="/traffic" element={<TrafficPage />} />
                 <Route path="/performance" element={<PerformancePage />} />
+                <Route path="/integration-plan" element={<IntegrationPlan />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
